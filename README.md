@@ -1,0 +1,6 @@
+# Zap Shift
+
+------
+ - Implement Forget Password ✅
+ - Requirement reading -> Complete
+ - Navbar Error <a> tag related -> resolve Pending....
