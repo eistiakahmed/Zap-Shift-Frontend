@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { useLoaderData } from 'react-router';
+import { useLoaderData, useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import useAuth from '../../Hooks/useAuth';
@@ -18,6 +18,8 @@ const SendParcel = () => {
   const { user } = useAuth();
 
   // console.log(user?.email);
+
+  const navigate = useNavigate()
 
   const serviceCenter = useLoaderData();
   const regionsDuplicate = serviceCenter.map((c) => c.region);
@@ -58,6 +60,7 @@ const SendParcel = () => {
     }
 
     console.log('cost', cost);
+    data.cost = cost;
 
     Swal.fire({
       title: 'Agree with the Cost?',
@@ -66,7 +69,7 @@ const SendParcel = () => {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'I am ready to pay!',
+      confirmButtonText: 'Confirm and Continue Payment',
     }).then((result) => {
       if (result.isConfirmed) {
         // save the parcel info to the data base
@@ -74,16 +77,20 @@ const SendParcel = () => {
           .post('/parcels', data)
           .then((res) => {
             console.log('after saving parcel', res.data);
+            if (res.data.insertedId) {
+              navigate('/dashboard/my-parcels');
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Parcel has created. Please Pay',
+                showConfirmButton: false,
+                timer: 2500,
+              });
+            }
           })
           .catch((err) => {
             console.log(err);
           });
-
-        // Swal.fire({
-        //   title: 'Deleted!',
-        //   text: 'Your file has been deleted.',
-        //   icon: 'success',
-        // });
       }
     });
   };
@@ -131,7 +138,7 @@ const SendParcel = () => {
             </label>
             <input
               type="text"
-              {...register('ParcelName')}
+              {...register('parcelName')}
               className="input input-bordered w-full"
               placeholder="Parcel Name"
             />

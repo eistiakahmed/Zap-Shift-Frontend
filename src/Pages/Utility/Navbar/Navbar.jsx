@@ -42,6 +42,14 @@ const Navbar = () => {
       <li>
         <NavLink to="/rider">Be a Rider</NavLink>
       </li>
+
+      {user && (
+        <>
+          <li>
+            <NavLink to="/dashboard/my-parcels">Dashboard</NavLink>
+          </li>
+        </>
+      )}
     </>
   );
   return (
@@ -81,9 +89,19 @@ const Navbar = () => {
       </div>
       <div className="navbar-end">
         {user ? (
-          <button onClick={handleLogoutUser} className="btn">
-            Sign Out
-          </button>
+          <div className="flex items-center gap-3">
+            <div className="tooltip" data-tip={user?.displayName}>
+              <img
+                src={user?.photoURL}
+                alt=""
+                referrerPolicy="no-referrer"
+                className="w-[50px] h-[50px] rounded-full"
+              />
+            </div>
+            <button onClick={handleLogoutUser} className="btn rounded-4xl">
+              Sign Out
+            </button>
+          </div>
         ) : (
           <>
             {' '}
@@ -91,10 +109,10 @@ const Navbar = () => {
               Sign In
             </Link>
             <Link className="flex items-center" to="/register">
-              <a className="btn rounded-3xl bg-[#c9eb65]">Sign Up</a>
-              <a className="text-[#c9eb65] bg-[#1f1f1f] w-10 h-10 rounded-full flex justify-center items-center">
+              <button className="btn rounded-3xl bg-[#c9eb65]">Sign Up</button>
+              <button className="text-[#c9eb65] bg-[#1f1f1f] w-10 h-10 rounded-full flex justify-center items-center">
                 <CgArrowTopRight size={25} />
-              </a>
+              </button>
             </Link>
           </>
         )}
